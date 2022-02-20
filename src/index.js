@@ -4,8 +4,13 @@ var cors = require('cors')
 const multer = require("multer")
 const path = require("path")
 app.use(express.json());
+app.use(express.static("public"))
 app.use(cors({credentials: true, origin: true}));
 
+
+app.use("/css",express.static(__dirname+"public/css"));
+app.use("/js",express.static(__dirname+"public/js"));
+app.use("images",express.static(__dirname+"public/images"))
 
 
 var storage = multer.diskStorage({
@@ -43,7 +48,9 @@ var upload = multer({
   
 // mypic is the name of file attribute
 });  
-
+app.use("/",(req,res)=>{
+    res.redirect("public/index.html");
+})
 app.post("/login",(req,res)=>{
         if(req.body.email=="gyan@gmail.com" && req.body.password=="gyan")
         {
