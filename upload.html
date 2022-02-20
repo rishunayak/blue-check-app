@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Site</title>
+    <link rel="icon" href="./images/icon.png" type="image/png" />
+    <link rel="stylesheet" href="./css/upload.css" />
+    <script src="./js/upload.js"></script>
+  </head>
+</head>
+<body>
+    <div id="container">
+        <div class="img"><img src="./images/logo.png" alt="" /></div>
+        <br />
+        <div id="inner_div">
+          <h3>Upload file below</h3>
+          <div class="underline"></div>
+          <br />
+          <form id="form" action="http://localhost:2345/uploadfile" 
+      enctype="multipart/form-data" method="POST">
+            <div class="input_div">
+              <input name="mypic" id="file" type="file" />
+            </div>
+            <div class="input_div">
+             <input type="submit" value="Upload">
+            </div>
+        </form>
+        </div>
+      </div>
+</body>
+</html>
