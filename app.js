@@ -1,10 +1,10 @@
 const app=require('./src/index');
 
-
-app.listen(2345,async()=>{
+const port=process.env.PORT || 2345;
+app.listen(port,async()=>{
     try
     {
-            console.log("Listening on port 2345");
+            console.log(`Listening on port ${port}`);
     }
     catch(e)
     {
