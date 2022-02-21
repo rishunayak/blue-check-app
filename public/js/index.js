@@ -11,7 +11,7 @@ async function authenticate()
 {
     try
     {
-        var res=await fetch("http://localhost:2345/login",{
+        var res=await fetch("/login",{
             method: 'post',
             headers: {
               'Content-Type': 'application/json'
