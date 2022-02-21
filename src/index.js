@@ -1,8 +1,11 @@
+require('dotenv/config')
 const express = require('express');
 const app=express();
 var cors = require('cors')
-const multer = require("multer")
-const path = require("path")
+const multer = require('multer')
+const AWS = require('aws-sdk')
+const uuid = require('uuid/v4')
+
 app.use(express.json());
 app.use(express.static("public"))
 app.use(cors({credentials: true, origin: true}));
@@ -15,46 +18,21 @@ app.use("images",express.static(__dirname+"public/images"))
 app.set('views', './public/')
 app.set('view engine', 'ejs')
 
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET
+})
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-
-        cb(null, "uploads")
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + "-" + Date.now()+".jpg")
+const storage = multer.memoryStorage({
+    destination: function(req, file, callback) {
+        callback(null, '')
     }
-  })
-       
+})
 
-const maxSize = 2 * 1000 * 1000;
-    
-var upload = multer({ 
-    storage: storage,
-    limits: { fileSize: maxSize },
-    fileFilter: function (req, file, cb){
-    
-        // Set the filetypes, it is optional
-        var filetypes = /jpeg|jpg|png/;
-        var mimetype = filetypes.test(file.mimetype);
-  
-        var extname = filetypes.test(path.extname(
-                    file.originalname).toLowerCase());
-        
-        if (mimetype && extname) {
-            return cb(null, true);
-        }
-      
-        cb("Error: File upload only supports the "
-                + "following filetypes - " + filetypes);
-      } 
-  
-// mypic is the name of file attribute
-});  
+const upload = multer({storage}).single('mypic')
 
 
 app.post("/login",(req,res)=>{
-    console.log(req);
         if(req.body.email=="gyan@gmail.com" && req.body.password=="gyan")
         {
             res.status(200).render("upload");
@@ -68,12 +46,28 @@ app.post("/login",(req,res)=>{
 app.get("/upload",(req,res)=>{
     res.render("upload");
 })
+
+app.post("/uploadfile",upload,function (req, res) {
+    let myFile = req.file.originalname.split(".")
+    const fileType = myFile[myFile.length - 1]
+
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `${uuid()}.${fileType}`,
+        Body: req.file.buffer
+    }
+
+    s3.upload(params, (error, data) => {
+        if(error){
+            res.status(500).render("error");
+        }
+
+        res.status(200).render("success");
+    })
+ 
+})
 app.get("/",(req,res)=>{
     res.render("index");
 })
 
-app.post("/uploadfile",upload.single("mypic"),function (req, res, next) {
-   
- 
-})
 module.exports=app;
