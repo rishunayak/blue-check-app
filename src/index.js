@@ -12,6 +12,9 @@ app.use("/css",express.static(__dirname+"public/css"));
 app.use("/js",express.static(__dirname+"public/js"));
 app.use("images",express.static(__dirname+"public/images"))
 
+app.set('views', './public/')
+app.set('view engine', 'ejs')
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -24,7 +27,7 @@ var storage = multer.diskStorage({
   })
        
 
-const maxSize = 1 * 1000 * 1000;
+const maxSize = 2 * 1000 * 1000;
     
 var upload = multer({ 
     storage: storage,
@@ -48,17 +51,26 @@ var upload = multer({
   
 // mypic is the name of file attribute
 });  
-app.use("/",(req,res)=>{
-    res.redirect("public/index.html");
-})
+
+
 app.post("/login",(req,res)=>{
+    console.log(req);
         if(req.body.email=="gyan@gmail.com" && req.body.password=="gyan")
         {
-            res.status(200).send({status:true,authenticate:true});
+            res.status(200).render("upload");
         }
         else
-            res.status(401).send({status:false,authenticate:false});
+        {
+             res.status(500).render("index",{status:false,authenticate:false});
+        }
+           
 });
+app.get("/upload",(req,res)=>{
+    res.render("upload");
+})
+app.get("/",(req,res)=>{
+    res.render("index");
+})
 
 app.post("/uploadfile",upload.single("mypic"),function (req, res, next) {
    

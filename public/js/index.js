@@ -24,7 +24,7 @@ async function authenticate()
         console.log(res);
     if(res.status==200)
     {
-        window.location.href="../upload.html";
+        window.location.href="/upload";
     }
     else
     {
