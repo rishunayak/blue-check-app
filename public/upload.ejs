@@ -19,10 +19,16 @@
           <div class="underline"></div>
           <br />
           <form id="form" action="/uploadfile" 
-      enctype="multipart/form-data" method="POST">
+          enctype="multipart/form-data" method="POST">
+      <div class="input_div">
+        <img src="./images/self_verify.jpeg" height="150px" width="200px" alt=""><br/><br/>
+        <input name="file1" id="file2" type="file" />
+      </div>
             <div class="input_div">
-              <input name="mypic" id="file" type="file" />
+              <img src="./images/id_card.jpeg" height="150px" width="320px" alt=""><br/><br/>
+              <input name="file2" id="file2" type="file" />
             </div>
+           
             <div class="input_div">
              <input type="submit" value="Upload">
             </div>
